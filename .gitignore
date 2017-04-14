@@ -1,0 +1,12 @@
+*.txt
+*.dm
+*.test
+*.train
+*.npy
+*.model
+*.sentence
+*.gram
+*.phrases
+cnn-sentence/runs/*
+cnn-sentence/data/*
+word2vec/models/*
