@@ -5,6 +5,41 @@ from collections import Counter
 import gensim
 from segChinese import filterChinese
 
+'''
+class MySentences(object):
+    def __init__(self, filename, bigram, trigram):
+        self.filename = filename
+        self.bigram = bigram
+        self.trigram = trigram
+                  
+    def __iter__(self):
+        with open(self.filename) as f:
+            for line in f:
+                yield ' '.join(self.trigram[self.bigram[filterChinese(unicode(line, 'utf-8'))]])
+
+def load_sentences(filename):
+    bigram = gensim.models.phrases.Phrases.load('../word2vec/models/bi.new')
+    trigram = gensim.models.phrases.Phrases.load('../word2vec/models/tri.new')
+    sentences = MySentences(filename, bigram, trigram)
+    return sentences
+'''
+
+def build_vocabulary(sentences):
+    model = gensim.models.Word2Vec.load('../word2vec/models/dm_model.1word')
+    #model = gensim.models.Word2Vec(sentences, size=100, window=5, min_count=5, workers=4) 
+    print 'Vocabulary Size:', len(model.wv.syn0)
+    max_document_length = 30
+
+    x = np.zeros((len(sentences), max_document_length))
+    for i, sentence in enumerate(sentences):
+        for j, word in enumerate(sentence):
+            if j >= max_document_length:
+                break
+            if word in model.wv.vocab:
+                x[i,j] = model.wv.vocab[word].index
+
+    return x, model.wv.syn0
+
 def load_data_and_labels(positive_data_file, negative_data_file):
     """
     Loads MR polarity data from files, splits the data into words and generates labels.
@@ -18,12 +53,12 @@ def load_data_and_labels(positive_data_file, negative_data_file):
     # Split by words
     x_text = positive_examples + negative_examples
 
-    bigram = gensim.models.phrases.Phrases.load('../word2vec/models/bi.phrases')
-    trigram = gensim.models.phrases.Phrases.load('../word2vec/models/tri.phrases')
-    quodgram = gensim.models.phrases.Phrases.load('../word2vec/models/quod.phrases')
-
-    x_text = [ ' '.join(quodgram[trigram[bigram[filterChinese(unicode(sent, 'utf-8'))]]]) for sent in x_text]
+    #bigram = gensim.models.phrases.Phrases.load('../word2vec/models/bi.new')
+    #trigram = gensim.models.phrases.Phrases.load('../word2vec/models/tri.new')
+    #x_text = [trigram[bigram[filterChinese(unicode(sent, 'utf-8'))]]  for sent in x_text]
     
+    x_text = [filterChinese(unicode(sent, 'utf-8')) for sent in x_text]
+
     # Generate labels
     positive_labels = [[0, 1] for _ in positive_examples]
     negative_labels = [[1, 0] for _ in negative_examples]

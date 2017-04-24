@@ -1,4 +1,5 @@
 import os
+import random
 
 def binary_search(x, a):
     l = 0
@@ -39,8 +40,27 @@ def filter_dm(dmsrc, dmreport):
     neg.close()
 
 
-if __name__ == '__main__':
-    dmsrc = '../scripts/dm.txt'
-    dmreport = '../scripts/dm_report.txt'
-    filter_dm(dmsrc, dmreport)
+def select_dm(src, dst, n, tdst, m):
+    with open(src) as f:
+        dm = [unicode(line, 'utf-8') for line in f.readlines()]
+    random.shuffle(dm)
+    with open(dst, 'w') as f:
+        for i in xrange(n):
+            f.write(dm[i].encode('utf-8'))
+        
+    with open(tdst, 'w') as f:
+        for i in xrange(m):
+            f.write(dm[n+i].encode('utf-8'))
 
+if __name__ == '__main__':
+    #dmsrc = '../scripts/dm.txt'
+    #dmreport = '../scripts/dm_report.txt'
+    #filter_dm(dmsrc, dmreport)
+    dmsrc = 'protected.dm'
+    dmdst = 'positive.train'
+    tdst = 'positive.test'
+    select_dm(dmsrc, dmdst, 3000000, tdst, 300000)
+    dmsrc = 'deleted_report.dm'
+    dmdst = 'negative.train'
+    tdst = 'negative.test'
+    select_dm(dmsrc, dmdst, 1000000, tdst, 100000)

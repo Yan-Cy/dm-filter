@@ -18,8 +18,8 @@ tf.flags.DEFINE_string("positive_data_file", "./data/positive.test", "Data sourc
 tf.flags.DEFINE_string("negative_data_file", "./data/negative.test", "Data source for the positive data.")
 
 # Eval Parameters
-tf.flags.DEFINE_integer("batch_size", 64, "Batch Size (default: 64)")
-tf.flags.DEFINE_string("checkpoint_dir", "./runs/1491897706/checkpoints", "Checkpoint directory from training run")
+tf.flags.DEFINE_integer("batch_size", 256, "Batch Size (default: 64)")
+tf.flags.DEFINE_string("checkpoint_dir", "./runs/1492510012/checkpoints", "Checkpoint directory from training run")
 tf.flags.DEFINE_boolean("eval_train", True, "Evaluate on all training data")
 
 # Misc Parameters
@@ -34,6 +34,7 @@ for attr, value in sorted(FLAGS.__flags.items()):
     print("{}={}".format(attr.upper(), value))
 print("")
 
+print 'Loading data...'
 # CHANGE THIS: Load data. Load your own data here
 if FLAGS.eval_train:
     x_raw, y_test = data_helpers.load_data_and_labels(FLAGS.positive_data_file, FLAGS.negative_data_file)
@@ -43,9 +44,11 @@ else:
     y_test = [1, 0]
 
 # Map data into vocabulary
-vocab_path = os.path.join(FLAGS.checkpoint_dir, "..", "vocab")
-vocab_processor = learn.preprocessing.VocabularyProcessor.restore(vocab_path)
-x_test = np.array(list(vocab_processor.transform(x_raw)))
+print 'Mapping data to vocabulary...'
+#vocab_path = os.path.join(FLAGS.checkpoint_dir, "..", "vocab")
+#vocab_processor = learn.preprocessing.VocabularyProcessor.restore(vocab_path)
+#x_test = np.array(list(vocab_processor.transform(x_raw)))
+x_test, vocab_vector = data_helpers.build_vocabulary(x_raw)
 
 print("\nEvaluating...\n")
 
@@ -77,10 +80,15 @@ with graph.as_default():
         # Collect the predictions here
         all_predictions = []
 
+        count = 0
+        total = int((len(x_test)-1) / FLAGS.batch_size) + 1
         for x_test_batch in batches:
+            count += 1
+            print count, ' / ', total
             batch_predictions = sess.run(predictions, {input_x: x_test_batch, dropout_keep_prob: 1.0})
             all_predictions = np.concatenate([all_predictions, batch_predictions])
 
+print 'Calculate Accuracy...'
 # Print accuracy if y_test is defined
 if y_test is not None:
     correct_predictions = float(sum(all_predictions == y_test))
@@ -97,9 +105,9 @@ if y_test is not None:
     for idx, predict in enumerate(all_predictions):
         matrix[int(y_test[idx])][int(predict)] += 1
         if predict == 1 and y_test[idx] == 0:
-            fPos.write(x_raw[idx].encode('utf8') + '\n')
+            fPos.write(' '.join(x_raw[idx]).encode('utf8') + '\n')
         elif predict == 0 and y_test[idx] == 1:
-            fNeg.write(x_raw[idx].encode('utf8') + '\n')
+            fNeg.write(' '.join(x_raw[idx]).encode('utf8') + '\n')
 
     print matrix
     fNeg.close()

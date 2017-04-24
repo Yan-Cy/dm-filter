@@ -9,4 +9,6 @@
 *.phrases
 cnn-sentence/runs/*
 cnn-sentence/data/*
+cnn-sentence/cnn-text-classification-tf/*
+cnn-sentence/mid_data/*
 word2vec/models/*
