@@ -27,7 +27,7 @@ def load_sentences(filename):
 def build_vocabulary(sentences):
     model = gensim.models.Word2Vec.load('../word2vec/models/dm_model.1word')
     #model = gensim.models.Word2Vec(sentences, size=100, window=5, min_count=5, workers=4) 
-    print 'Vocabulary Size:', len(model.wv.syn0)
+    #print 'Vocabulary Size:', len(model.wv.syn0)
     max_document_length = 30
 
     x = np.zeros((len(sentences), max_document_length))
