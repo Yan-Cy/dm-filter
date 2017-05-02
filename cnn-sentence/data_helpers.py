@@ -37,6 +37,8 @@ def build_vocabulary(sentences):
                 break
             if word in model.wv.vocab:
                 x[i,j] = model.wv.vocab[word].index
+            #else:
+            #    x[i,j] = -1
 
     return x, model.wv.syn0
 

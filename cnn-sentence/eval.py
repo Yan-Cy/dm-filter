@@ -36,6 +36,7 @@ print("")
 
 print 'Loading data...'
 # CHANGE THIS: Load data. Load your own data here
+
 if FLAGS.eval_train:
     x_raw, y_test = data_helpers.load_data_and_labels(FLAGS.positive_data_file, FLAGS.negative_data_file)
     y_test = np.argmax(y_test, axis=1)
@@ -51,6 +52,11 @@ print 'Mapping data to vocabulary...'
 x_test, vocab_vector = data_helpers.build_vocabulary(x_raw)
 
 print("\nEvaluating...\n")
+
+
+#x_test = np.load('./mid_data/x_dev.data.npy')
+#y_test = np.load('./mid_data/y_dev.data.npy')
+#y_test = np.argmax(y_test, axis=1)
 
 # Evaluation
 # ==================================================

@@ -6,13 +6,13 @@ def binary_search(x, a):
     r = len(a) - 1
     while l <= r:
         mid = (l + r) / 2
-        if a[mid] == x:
-            return True
+        if (a[mid] == x) or (x in a[mid]) or (a[mid] in x):
+            return mid
         elif a[mid] > x:
             r = mid - 1
         elif a[mid] < x:
             l = mid + 1
-    return False
+    return -1
 
 def filter_dm(dmsrc, dmreport):
     #pos = open('positive.dm', 'w')
@@ -52,10 +52,63 @@ def select_dm(src, dst, n, tdst, m):
         for i in xrange(m):
             f.write(dm[n+i].encode('utf-8'))
 
+def cleandm(possrc, posdst, negsrc, negdst):
+    print 'Loading positive dm...'
+    with open(possrc) as f:
+        pos = list(set([line.strip() for line in f.readlines()]))
+
+    print 'Sorting positive dm...'
+    pos.sort()
+
+    print 'loading negative dm...'
+    with open(negsrc) as f:
+        neg = list(set([line.strip() for line in f.readlines()]))
+    
+    print 'Sorting negative dm...'
+    neg.sort()
+
+    print 'Pos len:', len(pos)
+    print 'Neg len:', len(neg)
+
+    posclean = []
+    duplicate = []
+    negclean = set()
+    count = 0
+
+    print 'Looking for duplicates...'
+    for i, sent in enumerate(pos):
+        t = binary_search(sent, neg)
+        if t == -1:
+            posclean.append(sent)
+        else:
+            negclean.add(t)
+            duplicate.append(sent)
+            count += 1
+            #print i, count
+            #print sent, neg[t]
+
+    print 'Saving positive dm...'
+    with open(posdst, 'w') as f:
+        for posdm in posclean:
+            f.write(posdm + '\n')
+
+    print 'saving negative dm...'
+    with open(negdst, 'w') as f:
+        for i, negdm in enumerate(neg):
+            if i not in negclean:
+                f.write(negdm + '\n')
+
+    with open('duplicate.txt', 'w') as f:
+        for dup in duplicate:
+            f.write(dup + '\n') 
+
+    print 'Total Duplicate Found: ', count
+
 if __name__ == '__main__':
     #dmsrc = '../scripts/dm.txt'
     #dmreport = '../scripts/dm_report.txt'
     #filter_dm(dmsrc, dmreport)
+    '''
     dmsrc = 'protected.dm'
     dmdst = 'positive.train'
     tdst = 'positive.test'
@@ -64,3 +117,9 @@ if __name__ == '__main__':
     dmdst = 'negative.train'
     tdst = 'negative.test'
     select_dm(dmsrc, dmdst, 1000000, tdst, 100000)
+    '''
+    possrc = 'protected.dm'
+    posdst = 'positive.clean'
+    negsrc = 'deleted_report.dm'
+    negdst = 'negative.clean'
+    cleandm(possrc, posdst, negsrc, negdst)

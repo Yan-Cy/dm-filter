@@ -14,9 +14,9 @@ import pickle
 # ==================================================
 
 # Data loading params
-tf.flags.DEFINE_float("dev_sample_percentage", .1, "Percentage of the training data to use for validation")
-tf.flags.DEFINE_string("positive_data_file", "../danmu/positive.train", "Data source for the positive data.")
-tf.flags.DEFINE_string("negative_data_file", "../danmu/negative.train", "Data source for the negative data.")
+tf.flags.DEFINE_float("dev_sample_percentage", .02, "Percentage of the training data to use for validation")
+tf.flags.DEFINE_string("positive_data_file", "../danmu/positive.clean", "Data source for the positive data.")
+tf.flags.DEFINE_string("negative_data_file", "../danmu/negative.clean", "Data source for the negative data.")
 #tf.flags.DEFINE_string('pretrained_model', './runs/1492488399/checkpoints/model-17000', 'Used to resume training')
 
 # Model Hyperparameters
@@ -27,8 +27,8 @@ tf.flags.DEFINE_float("dropout_keep_prob", 0.5, "Dropout keep probability (defau
 tf.flags.DEFINE_float("l2_reg_lambda", 0.0, "L2 regularization lambda (default: 0.0)")
 
 # Training parameters
-tf.flags.DEFINE_integer("batch_size", 256, "Batch Size (default: 64)")
-tf.flags.DEFINE_integer("num_epochs", 200, "Number of training epochs (default: 200)")
+tf.flags.DEFINE_integer("batch_size", 8192, "Batch Size (default: 64)")
+tf.flags.DEFINE_integer("num_epochs", 100, "Number of training epochs (default: 200)")
 tf.flags.DEFINE_integer("evaluate_every", 200, "Evaluate model on dev set after this many steps (default: 100)")
 tf.flags.DEFINE_integer("checkpoint_every", 200, "Save model after this many steps (default: 100)")
 tf.flags.DEFINE_integer("num_checkpoints", 5, "Number of checkpoints to store (default: 5)")
@@ -43,19 +43,19 @@ for attr, value in sorted(FLAGS.__flags.items()):
     print("{}={}".format(attr.upper(), value))
 print("")
 
-'''
+
 # Data Preparation
 # ==================================================
 
 # Load data
 print("Loading data...")
 
-#x_text, y = data_helpers.load_data_and_labels(FLAGS.positive_data_file, FLAGS.negative_data_file)
-#pickle.dump(x_text, open('mid_data/x_text.data', 'wb'))
-#np.save('mid_data/y.data', y)
+x_text, y = data_helpers.load_data_and_labels(FLAGS.positive_data_file, FLAGS.negative_data_file)
+pickle.dump(x_text, open('mid_data/x_text.data', 'wb'))
+np.save('mid_data/y.data', y)
 
-x_text = pickle.load( open('mid_data/x_text.data', 'rb') )
-y = np.load('mid_data/y.data.npy')
+#x_text = pickle.load( open('mid_data/x_text.data', 'rb') )
+#y = np.load('mid_data/y.data.npy')
 
 
 # Build vocabulary
@@ -101,12 +101,13 @@ np.save('mid_data/x_dev.data', x_dev)
 np.save('mid_data/y_train.data', y_train)
 np.save('mid_data/y_dev.data', y_dev)
 
-'''
-vocab_vector = np.load('mid_data/vocab_vector.data.npy')
-x_train = np.load('mid_data/x_train.data.npy')
-x_dev = np.load('mid_data/x_dev.data.npy')[:100000]
-y_train = np.load('mid_data/y_train.data.npy')
-y_dev = np.load('mid_data/y_dev.data.npy')[:100000]
+
+#vocab_vector = np.load('mid_data/vocab_vector.data.npy')
+#x_train = np.load('mid_data/x_train.data.npy')
+#x_dev = np.load('mid_data/x_dev.data.npy')
+#y_train = np.load('mid_data/y_train.data.npy')
+#y_dev = np.load('mid_data/y_dev.data.npy')  
+
 
 # Training
 # ==================================================
@@ -117,7 +118,7 @@ with tf.Graph().as_default():
     session_conf = tf.ConfigProto(
       allow_soft_placement=FLAGS.allow_soft_placement,
       log_device_placement=FLAGS.log_device_placement,
-      device_count={'CPU': 20})
+      device_count={'CPU': 48})
     sess = tf.Session(config=session_conf)
     with sess.as_default():
         cnn = TextCNN(
@@ -218,7 +219,11 @@ with tf.Graph().as_default():
         batches = data_helpers.batch_iter(
             list(zip(x_train, y_train)), FLAGS.batch_size, FLAGS.num_epochs)
         dev_record = open('dev.record', 'w')
+        dev_size = len(x_dev)
+        dev_record.write('Dev size: {}\n'.format(dev_size))
         dev_record.write('Step      Accuracy      Loss\n')
+        dev_size = len(x_dev)
+
         # Training loop. For each batch...
         for batch in batches:
             x_batch, y_batch = zip(*batch)
@@ -230,10 +235,10 @@ with tf.Graph().as_default():
                 sum_accuracy = 0.0
                 sum_loss = 0.0
                 cnt = 0.0
-                num_batches = 200
+                num_batches = int((dev_size-1) / FLAGS.batch_size) + 1
                 for dev_num in range(num_batches):
-                    s = dev_num * 500
-                    t = s + 500 
+                    s = dev_num * FLAGS.batch_size
+                    t = min(s + FLAGS.batch_size, dev_size) 
                     x_dev_batch = x_dev[s:t]
                     y_dev_batch = y_dev[s:t]
                     #accuracy += dev_step(x_dev, y_dev, writer=dev_summary_writer)
