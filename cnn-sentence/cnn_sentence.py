@@ -27,6 +27,7 @@ class CNN_Sentence(object):
                 self.input_x = graph.get_operation_by_name('input_x').outputs[0]
                 self.dropout_keep_prob = graph.get_operation_by_name('dropout_keep_prob').outputs[0]
                 self.predictions = graph.get_operation_by_name('output/predictions').outputs[0]
+                self.scores = graph.get_operation_by_name('output/scores').outputs[0]
 
     def predict(self, x_raw, print_info = False):
         with self.sess.as_default():
