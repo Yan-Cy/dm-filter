@@ -14,7 +14,7 @@ class CNN_Sentence(object):
                 ):
         self.batch_size = 256
 
-        print checkpoint_dir
+        #print checkpoint_dir
         checkpoint_file = tf.train.latest_checkpoint(checkpoint_dir)
         graph = tf.Graph()
         with graph.as_default():

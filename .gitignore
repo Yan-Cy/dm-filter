@@ -9,6 +9,7 @@
 *.phrases
 *.clean
 *.data
+*.pyc
 cnn-sentence/runs/*
 cnn-sentence/data/*
 cnn-sentence/cnn-text-classification-tf/*
