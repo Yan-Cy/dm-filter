@@ -45,9 +45,11 @@ $Root = $shd-magi-01:/mnt/storage01/chenyang
                 )
         
         predict(self,
-                x_raw, # input data, 2 dimention list. Use segChinese.filterChinese to convert Chinese string to list: filterChinese(unicode(sentence, 'utf-8'))
+                x_raw, # input data, list of strings
                 print_info = False # Print infomation while testing
                 )
+        # Return: list of scores, [[score for negative, score for positive], ...]
+
 
         evaluate(self,
                 y_test, # Ground Truth, 1 dimention np array
