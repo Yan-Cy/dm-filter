@@ -12,6 +12,7 @@
 *.pyc
 *.pos
 *.neg
+*.swp
 cnn-sentence/runs/*
 cnn-sentence/data/*
 cnn-sentence/cnn-text-classification-tf/*
