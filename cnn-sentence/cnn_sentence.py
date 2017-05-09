@@ -32,7 +32,7 @@ class CNN_Sentence(object):
 
     def predict(self, x_text, print_info = False):
         #x_raw = [filterChinese(unicode(sent, 'utf-8')) for sent in x_text]
-
+        x_raw = x_text
         with self.sess.as_default():
             x_test, vocab_vector = data_helpers.build_vocabulary(x_raw)
             batches = data_helpers.batch_iter(list(x_test), self.batch_size, 1, shuffle=False)
@@ -95,6 +95,7 @@ if __name__ == '__main__':
     #print predictions
     #print y_test
     #print len(scores), scores[:20]
-    accuracy = cnn_sentence.evaluate(y_test, scores)
+    print scores.shape
+    #accuracy = cnn_sentence.evaluate(y_test, scores)
 
 
