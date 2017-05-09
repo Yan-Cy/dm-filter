@@ -1,5 +1,5 @@
 hive -e "
 set mapreduce.job.queuename=crontab;
 use db;
-select * from dm_index" > "./dm_index.txt"
+select * from ods_dm_report" > "./dm_index.txt"
 

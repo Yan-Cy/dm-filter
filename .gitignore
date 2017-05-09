@@ -10,6 +10,8 @@
 *.clean
 *.data
 *.pyc
+*.pos
+*.neg
 cnn-sentence/runs/*
 cnn-sentence/data/*
 cnn-sentence/cnn-text-classification-tf/*

@@ -48,8 +48,8 @@ def train_vec(sentences):
 
     #modelfile = 'models/dm_model.new'
     #model = gensim.models.Word2Vec.load(modelfile)
-    model = gensim.models.Word2Vec(sentences, size=100, window=6, min_count=5, workers=48)
-    model.save('models/dm_model.1word')
+    model = gensim.models.Word2Vec(sentences, size=100, window=6, min_count=5, workers=20)
+    model.save('models/dm_model.1word.alldm')
 
 
 if __name__ == '__main__':

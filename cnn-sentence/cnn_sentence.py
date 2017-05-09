@@ -8,7 +8,7 @@ class CNN_Sentence(object):
 
     def __init__(self,
                 batch_size = 256,
-                checkpoint_dir = './runs/1492510012/checkpoints/',
+                checkpoint_dir = './runs/1493697887/checkpoints/',
                 allow_soft_placement = True,
                 log_device_placement = False
                 ):
@@ -31,7 +31,7 @@ class CNN_Sentence(object):
                 self.scores = graph.get_operation_by_name('output/scores').outputs[0]
 
     def predict(self, x_text, print_info = False):
-        x_raw = [filterChinese(unicode(sent, 'utf-8')) for sent in x_text]
+        #x_raw = [filterChinese(unicode(sent, 'utf-8')) for sent in x_text]
 
         with self.sess.as_default():
             x_test, vocab_vector = data_helpers.build_vocabulary(x_raw)
@@ -84,8 +84,10 @@ class CNN_Sentence(object):
 
 
 if __name__ == '__main__':
-    posfile = 'data/positive.test'
-    negfile = 'data/negative.test'
+    #posfile = 'data/positive.test'
+    #negfile = 'data/negative.test'
+    posfile = '../danmu/quanzhi/quanzhi6_1w.pos'
+    negfile = '../danmu/quanzhi/quanzhi6.neg'
     x_raw, y_test = data_helpers.load_data_and_labels(posfile, negfile)
     y_test = np.argmax(y_test, axis=1)
     cnn_sentence = CNN_Sentence()
