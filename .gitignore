@@ -14,7 +14,6 @@
 *.neg
 *.swp
 cnn-sentence/runs/*
-cnn-sentence/data/*
 cnn-sentence/cnn-text-classification-tf/*
 cnn-sentence/mid_data/*
 cnn-sentence/mid_data_noisy/*

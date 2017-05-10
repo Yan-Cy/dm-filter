@@ -15,7 +15,7 @@ def binary_search(x, a):
     return -1
 
 def filter_dm(dmsrc, dmreport):
-    pos = open('quanzhi6.pos', 'w')
+    pos = open('mayun_poorhappy/mayun.pos', 'w')
     dm_list = {}
     pos_list = {}
     with open(dmsrc) as f:
@@ -32,7 +32,7 @@ def filter_dm(dmsrc, dmreport):
                 pos_list[dmid] = content
     #pos.close()
    
-    neg = open('quanzhi6.neg', 'w')
+    neg = open('mayun_poorhappy/mayun.neg', 'w')
     neg_dm = []
     count = 0
     with open(dmreport) as f:
@@ -48,8 +48,8 @@ def filter_dm(dmsrc, dmreport):
             if dmid in dm_list.keys():
                 if stat == 3:
                     continue
-                if report_cnt > 1 or stat == 1 or stat == 4:
-                    neg.write(dm_list[dmid].encode('utf8') + '\n')
+                #if report_cnt > 1 or stat == 1 or stat == 4:
+                neg.write(dm_list[dmid].encode('utf8') + '\n')
             else:
                 count += 1
 
@@ -131,11 +131,11 @@ def cleandm(possrc, posdst, negsrc, negdst):
     print 'Total Duplicate Found: ', count
 
 if __name__ == '__main__':
-    dmsrc = '../scripts/quanzhi6.txt'
-    dmreport = '../scripts/quanzhi6_report.txt'
+    dmsrc = '../scripts/mayun_poorhappy.txt'
+    dmreport = '../scripts/mayun_poorhappy_report.txt'
     filter_dm(dmsrc, dmreport)
 
-    select_dm('quanzhi6.pos', 'quanzhi6_1w.pos', 10000)
+    #select_dm('mayun.pos', 'quanzhi6_1w.pos', 10000)
     '''
     dmsrc = 'protected.dm'
     dmdst = 'positive.train'

@@ -29,17 +29,11 @@ class CNN_Sentence(object):
                 self.dropout_keep_prob = graph.get_operation_by_name('dropout_keep_prob').outputs[0]
                 self.predictions = graph.get_operation_by_name('output/predictions').outputs[0]
                 self.scores = graph.get_operation_by_name('output/scores').outputs[0]
-<<<<<<< HEAD
 
-    def predict(self, x_text, print_info = False):
-        x_raw = [filterChinese(unicode(sent, 'utf-8')) for sent in x_text]
-
-=======
 
     def predict(self, x_text, print_info = False):
         #x_raw = [filterChinese(unicode(sent, 'utf-8')) for sent in x_text]
         x_raw = x_text
->>>>>>> a5ce68f923f114f8516073c0d5f4e0ed589f1836
         with self.sess.as_default():
             x_test, vocab_vector = data_helpers.build_vocabulary(x_raw)
             batches = data_helpers.batch_iter(list(x_test), self.batch_size, 1, shuffle=False)
@@ -93,8 +87,8 @@ class CNN_Sentence(object):
 if __name__ == '__main__':
     #posfile = 'data/positive.test'
     #negfile = 'data/negative.test'
-    posfile = '../danmu/quanzhi/quanzhi6_1w.pos'
-    negfile = '../danmu/quanzhi/quanzhi6.neg'
+    posfile = '../danmu/mayun_poorhappy/mayun.pos'
+    negfile = '../danmu/mayun_poorhappy/mayun.neg'
     x_raw, y_test = data_helpers.load_data_and_labels(posfile, negfile)
     y_test = np.argmax(y_test, axis=1)
     cnn_sentence = CNN_Sentence()
@@ -102,7 +96,7 @@ if __name__ == '__main__':
     #print predictions
     #print y_test
     #print len(scores), scores[:20]
-    print scores.shape
-    #accuracy = cnn_sentence.evaluate(y_test, scores)
+    #print scores.shape
+    accuracy = cnn_sentence.evaluate(y_test, scores)
 
 

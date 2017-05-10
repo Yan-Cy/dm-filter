@@ -9,8 +9,8 @@ import data_helpers
 
 n_classes = 2
 
-posfile = '../danmu/quanzhi/quanzhi6_1w.pos'
-negfile = '../danmu/quanzhi/quanzhi6.neg'
+posfile = '../danmu/mayun_poorhappy/mayun.pos'
+negfile = '../danmu/mayun_poorhappy/mayun.neg'
 x_raw, y_test = data_helpers.load_data_and_labels(posfile, negfile) 
 y_test = np.argmax(y_test, axis=1)
 cnn_sentence = CNN_Sentence()
@@ -25,7 +25,7 @@ for i, score in enumerate(scores):
     pos = (score[1] - minscore) / scorerange
     #print [neg, pos]
     y_score[i] = pos / (pos + neg)
-    print y_score[i] 
+    #print y_score[i] 
 
 fpr = dict()
 tpr = dict()
@@ -58,5 +58,5 @@ plt.xlabel('False Positive Rate')
 plt.ylabel('True Positive Rate')
 plt.title('Receiver operating characteristic example')
 plt.legend(loc="lower right")
-plt.savefig('result.png')
+plt.savefig('data/mayun.png')
 #plt.show()

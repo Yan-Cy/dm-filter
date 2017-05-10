@@ -14,8 +14,8 @@ import csv
 # ==================================================
 
 # Data Parameters
-tf.flags.DEFINE_string("positive_data_file", "../danmu/quanzhi/quanzhi6_1w.pos", "Data source for the positive data.")
-tf.flags.DEFINE_string("negative_data_file", "../danmu/quanzhi/quanzhi6.neg", "Data source for the positive data.")
+tf.flags.DEFINE_string("positive_data_file", "../danmu/mayun_poorhappy/mayun.pos", "Data source for the positive data.")
+tf.flags.DEFINE_string("negative_data_file", "../danmu/mayun_poorhappy/mayun.neg", "Data source for the positive data.")
 
 # Eval Parameters
 tf.flags.DEFINE_integer("batch_size", 256, "Batch Size (default: 64)")
@@ -110,6 +110,8 @@ if y_test is not None:
 
     for idx, predict in enumerate(all_predictions):
         matrix[int(y_test[idx])][int(predict)] += 1
+        #print x_raw[idx]
+        #print ' '.join(x_raw[idx])
         if predict == 1 and y_test[idx] == 0:
             fPos.write(' '.join(x_raw[idx]).encode('utf8') + '\n')
         elif predict == 0 and y_test[idx] == 1:

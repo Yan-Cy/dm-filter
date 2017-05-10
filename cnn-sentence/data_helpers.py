@@ -35,6 +35,7 @@ def build_vocabulary(sentences):
         for j, word in enumerate(sentence):
             if j >= max_document_length:
                 break
+            #print type(word)
             if word in model.wv.vocab:
                 x[i,j] = model.wv.vocab[word].index
             #else:
@@ -59,7 +60,7 @@ def load_data_and_labels(positive_data_file, negative_data_file):
     #trigram = gensim.models.phrases.Phrases.load('../word2vec/models/tri.new')
     #x_text = [trigram[bigram[filterChinese(unicode(sent, 'utf-8'))]]  for sent in x_text]
     
-    #x_text = [filterChinese(unicode(sent, 'utf-8')) for sent in x_text]
+    x_text = [filterChinese(unicode(sent, 'utf-8')) for sent in x_text]
 
     # Generate labels
     positive_labels = [[0, 1] for _ in positive_examples]
