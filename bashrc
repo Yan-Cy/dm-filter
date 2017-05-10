@@ -1,1 +1,1 @@
-export PATH=/root/anaconda2/bin:$PATH
+export PATH=/mnt/storage01/nlp/dengyanlei/tools/anaconda/bin:$PATH
